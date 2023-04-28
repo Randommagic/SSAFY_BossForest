@@ -2,13 +2,13 @@ package com.ssafy.raid.auth.dto;
 
 public class LoginRequestDTO extends RequestDTO{
 	
-	private String id;
+	private String username;
 	
 	private String password;
 
-	public LoginRequestDTO(String id, String password) {
+	public LoginRequestDTO(String username, String password) {
 		super();
-		this.id = id;
+		this.username = username;
 		this.password = password;
 	}
 
@@ -16,12 +16,12 @@ public class LoginRequestDTO extends RequestDTO{
 		super();
 	}
 
-	public String getId() {
-		return id;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {

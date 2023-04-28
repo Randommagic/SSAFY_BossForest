@@ -3,6 +3,7 @@ package com.ssafy.raid.auth.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.ssafy.raid.auth.dto.Account;
 import com.ssafy.raid.auth.dto.LoginRequestDTO;
@@ -11,8 +12,9 @@ import com.ssafy.raid.auth.dto.builder.ResponseBuilder;
 import com.ssafy.raid.auth.repository.AccountRepository;
 import com.ssafy.raid.auth.service.util.BcryptUtils;
 
-import jakarta.servlet.http.HttpSession;
+import javax.servlet.http.HttpSession;
 
+@Service
 public class AccountServiceImpl implements AccountService {
 	
 	@Autowired
@@ -21,26 +23,29 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public ResponseDTO login(LoginRequestDTO loginRequest, HttpSession session) {
 		
-		if(loginRequest.getId().isBlank() || loginRequest.getPassword().isBlank()) {
+		if(loginRequest.getUsername().isBlank() || loginRequest.getPassword().isBlank()) {
 			return ResponseBuilder.InvalidParameters();
 		}
 		
 
-		Optional<Account> accountOptional = accountRepository.findById(loginRequest.getId());
+		Optional<Account> accountOptional = accountRepository.findById(loginRequest.getUsername());
 		
 		if(accountOptional.isEmpty()) return ResponseBuilder.AuthIsIncomplete();
 
 		Account account = accountOptional.get();
 		
-		if(!equalPassword(account.getPassword(),loginRequest.getPassword())) return ResponseBuilder.AuthFailed();
+		if(!BcryptUtils.match(loginRequest.getPassword(), account.getPassword())) return ResponseBuilder.AuthFailed();
 		
         session.setAttribute("account", account);
 
         return ResponseBuilder.AuthComplete(account);
     }
-	
-	private boolean equalPassword(String source, String target) {
-		return BcryptUtils.bcrypt(source).equals(target);
+
+	@Override
+	public boolean logout(HttpSession session) {
+		if(session.getAttribute("account") == null) return false;
+		session.invalidate();
+		return true;
 	}
 
 }

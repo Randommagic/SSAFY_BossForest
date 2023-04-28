@@ -1,5 +1,7 @@
 package com.ssafy.raid.auth.dto;
 
+import org.springframework.http.HttpStatus;
+
 public class ResponseDTO {
 	
 	int ResultCode;
@@ -10,9 +12,9 @@ public class ResponseDTO {
 	
 	String Message;
 	
-	transient int httpStatus;
+	transient HttpStatus httpStatus;
 
-	public ResponseDTO(int resultCode, String userId, String nickName, String message, int httpStatus) {
+	public ResponseDTO(int resultCode, String userId, String nickName, String message, HttpStatus httpStatus) {
 		super();
 		ResultCode = resultCode;
 		UserId = userId;
@@ -53,7 +55,7 @@ public class ResponseDTO {
 		Message = message;
 	}
 
-	public int getHttpStatus() {
+	public HttpStatus getHttpStatus() {
 		return httpStatus;
 	}
 	

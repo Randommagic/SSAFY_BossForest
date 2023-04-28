@@ -1,39 +1,49 @@
 package com.ssafy.raid.auth.dto;
 
-import com.ssafy.raid.auth.service.util.BcryptUtils;
+import java.util.Collection;
+import java.util.Collections;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-@Table(name = "account")
-public class Account {
-    @Id
+@Table
+public class Account implements UserDetails{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 18881915175083892L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long uid;
+    private Integer uid;
+    
+    @Column(length = 32, nullable = false)
+    private String id;
 
     @Column(length = 72, nullable = false)
     private String password;
 
     @Column(length = 32, nullable = false)
-    private String id;
-
-    @Column(length = 32, nullable = false)
     private String nickname;
     
     public void setPassword(String password) {
-        this.password = BcryptUtils.bcrypt(password);
+        this.password = password;
     }
 
-	public Long getUid() {
+	public Integer getUid() {
 		return uid;
 	}
 
-	public void setUid(Long uid) {
+	public void setUid(Integer uid) {
 		this.uid = uid;
 	}
 
@@ -56,6 +66,36 @@ public class Account {
 	public String getPassword() {
 		return password;
 	}
+	
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public String getUsername() {
+        return id;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
     
     
 }

@@ -1,11 +1,14 @@
 package com.ssafy.raid.auth.service.util;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import at.favre.lib.crypto.bcrypt.BCrypt;
 
 public class BcryptUtils {
-    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public static String bcrypt(String origin) {
-        return encoder.encode(origin);
+    	return BCrypt.withDefaults().hashToString(12, origin.toCharArray());
+    }
+    
+    public static boolean match(String rawPassword, String encodedPassword) {
+    	return BCrypt.verifyer().verify(rawPassword.toCharArray(), encodedPassword).verified;
     }
 }
