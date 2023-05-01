@@ -2,23 +2,29 @@ package com.ssafy.raid.auth.dto;
 
 import org.springframework.http.HttpStatus;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
+@JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
 public class ResponseDTO {
 	
 	int ResultCode;
 	
 	String UserId;
 	
-	String NickName;
+	String Nickname;
 	
 	String Message;
 	
+	@JsonIgnore
 	transient HttpStatus httpStatus;
 
 	public ResponseDTO(int resultCode, String userId, String nickName, String message, HttpStatus httpStatus) {
 		super();
 		ResultCode = resultCode;
 		UserId = userId;
-		NickName = nickName;
+		Nickname = nickName;
 		Message = message;
 		this.httpStatus = httpStatus;
 	}
@@ -40,11 +46,11 @@ public class ResponseDTO {
 	}
 
 	public String getNickName() {
-		return NickName;
+		return Nickname;
 	}
 
 	public void setNickName(String nickName) {
-		NickName = nickName;
+		Nickname = nickName;
 	}
 
 	public String getMessage() {
