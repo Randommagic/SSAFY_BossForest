@@ -13,20 +13,20 @@ public class ResponseDTO {
 	
 	String UserId;
 	
-	String Nickname;
-	
 	String Message;
+	
+	AccountData Data;
 	
 	@JsonIgnore
 	transient HttpStatus httpStatus;
 
-	public ResponseDTO(int resultCode, String userId, String nickname, String message, HttpStatus httpStatus) {
+	public ResponseDTO(int resultCode, String userId, String message, HttpStatus httpStatus, AccountData data) {
 		super();
 		ResultCode = resultCode;
 		UserId = userId;
-		Nickname = nickname;
 		Message = message;
 		this.httpStatus = httpStatus;
+		this.Data = data;
 	}
 
 	public int getResultCode() {
@@ -45,14 +45,6 @@ public class ResponseDTO {
 		UserId = userId;
 	}
 
-	public String getNickName() {
-		return Nickname;
-	}
-
-	public void setNickName(String nickname) {
-		Nickname = nickname;
-	}
-
 	public String getMessage() {
 		return Message;
 	}
@@ -67,8 +59,16 @@ public class ResponseDTO {
 
 	@Override
 	public String toString() {
-		return "ResponseDTO [ResultCode=" + ResultCode + ", UserId=" + UserId + ", Nickname=" + Nickname + ", Message="
+		return "ResponseDTO [ResultCode=" + ResultCode + ", UserId=" + UserId + ", Message="
 				+ Message + "]";
+	}
+
+	public AccountData getData() {
+		return Data;
+	}
+
+	public void setData(AccountData data) {
+		this.Data = data;
 	}
 	
 	
