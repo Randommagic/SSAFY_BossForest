@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.raid.auth.dto.Account;
-import com.ssafy.raid.auth.exception.BadRequestException;
 import com.ssafy.raid.auth.repository.AccountRepository;
 
 @Service

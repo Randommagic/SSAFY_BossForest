@@ -19,14 +19,10 @@ public class RequestParameterValidationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-
-        if (username == null || password == null || username.isBlank() || password.isBlank()) {
-        	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-	        response.setContentType("application/json");
-        	response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseBuilder.InvalidParameters()));
-            return;
+        
+        if ("/login".equals(request.getRequestURI()) && request.getMethod().equalsIgnoreCase("POST")) {
+        	
         }
-
         filterChain.doFilter(request, response);
     }
 }
