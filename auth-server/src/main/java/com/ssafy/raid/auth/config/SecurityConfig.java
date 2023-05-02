@@ -77,15 +77,15 @@ public class SecurityConfig{
 	    return (request, response, exception) -> {
 	    	System.out.println(exception.getClass());
 	    	if(exception instanceof BadCredentialsException) {
-	    		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+	    		response.setStatus(HttpServletResponse.SC_OK);
 		        response.setContentType("application/json");
 		        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseBuilder.AuthFailed()));
 	    	}else if(exception instanceof BadRequestException){
-	    		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	    		response.setStatus(HttpServletResponse.SC_OK);
 		        response.setContentType("application/json");
 	        	response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseBuilder.InvalidParameters()));
 	    	}else {
-	    		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+	    		response.setStatus(HttpServletResponse.SC_OK);
 		        response.setContentType("application/json");
 		        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseBuilder.AuthIsIncomplete()));
 	    	}
