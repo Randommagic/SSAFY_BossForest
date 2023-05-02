@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.raid.auth.dto.Account;
+import com.ssafy.raid.auth.exception.BadRequestException;
 import com.ssafy.raid.auth.repository.AccountRepository;
 
 @Service
@@ -18,7 +19,6 @@ public class AccountUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account = accountRepository.findById(username).orElseThrow(() -> new UsernameNotFoundException(username));
-
         return account;
     }
 }

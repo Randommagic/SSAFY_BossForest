@@ -20,11 +20,11 @@ public class ResponseDTO {
 	@JsonIgnore
 	transient HttpStatus httpStatus;
 
-	public ResponseDTO(int resultCode, String userId, String nickName, String message, HttpStatus httpStatus) {
+	public ResponseDTO(int resultCode, String userId, String nickname, String message, HttpStatus httpStatus) {
 		super();
 		ResultCode = resultCode;
 		UserId = userId;
-		Nickname = nickName;
+		Nickname = nickname;
 		Message = message;
 		this.httpStatus = httpStatus;
 	}
@@ -49,8 +49,8 @@ public class ResponseDTO {
 		return Nickname;
 	}
 
-	public void setNickName(String nickName) {
-		Nickname = nickName;
+	public void setNickName(String nickname) {
+		Nickname = nickname;
 	}
 
 	public String getMessage() {
@@ -64,6 +64,13 @@ public class ResponseDTO {
 	public HttpStatus getHttpStatus() {
 		return httpStatus;
 	}
+
+	@Override
+	public String toString() {
+		return "ResponseDTO [ResultCode=" + ResultCode + ", UserId=" + UserId + ", Nickname=" + Nickname + ", Message="
+				+ Message + "]";
+	}
+	
 	
 	
 }

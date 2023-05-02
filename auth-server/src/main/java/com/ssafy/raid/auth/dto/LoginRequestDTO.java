@@ -1,9 +1,16 @@
 package com.ssafy.raid.auth.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class LoginRequestDTO extends RequestDTO{
 	
+	@NotBlank
+	@NotNull
 	private String username;
 	
+	@NotBlank
+	@NotNull
 	private String password;
 
 	public LoginRequestDTO(String username, String password) {
@@ -31,5 +38,12 @@ public class LoginRequestDTO extends RequestDTO{
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	@Override
+	public String toString() {
+		return "LoginRequestDTO [username=" + username + ", password=" + password + "]";
+	}
+	
+	
 
 }

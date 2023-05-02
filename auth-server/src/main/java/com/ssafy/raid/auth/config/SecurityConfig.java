@@ -5,24 +5,27 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.raid.auth.dto.Account;
 import com.ssafy.raid.auth.dto.builder.ResponseBuilder;
-import com.ssafy.raid.auth.service.AccountUserDetailsService;
+import com.ssafy.raid.auth.filter.RequestParameterValidationFilter;
 
 @Configuration
+@EnableWebSecurity(debug = true)
 public class SecurityConfig{
 	
 	@Bean
@@ -35,6 +38,7 @@ public class SecurityConfig{
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
             .and()
+            .addFilterBefore(new RequestParameterValidationFilter(), UsernamePasswordAuthenticationFilter.class)
             .formLogin()
                 .loginProcessingUrl("/login")
                 .usernameParameter("username")
@@ -61,9 +65,16 @@ public class SecurityConfig{
 	@Bean
 	public AuthenticationFailureHandler authenticationFailureHandler() {
 	    return (request, response, exception) -> {
-	        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-	        response.setContentType("application/json");
-	        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseBuilder.AuthFailed()));
+	    	System.out.println(exception.getClass());
+	    	if(exception instanceof BadCredentialsException) {
+	    		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		        response.setContentType("application/json");
+		        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseBuilder.AuthFailed()));
+	    	}else {
+	    		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		        response.setContentType("application/json");
+		        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseBuilder.AuthIsIncomplete()));
+	    	}
 	    };
 	}
 	
@@ -75,17 +86,17 @@ public class SecurityConfig{
 	}
 	
 	@Bean
-    public PasswordEncoder bcryptPasswordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
-    }
-	
+	}
+
 	public void configureGlobal(
 			@Autowired AuthenticationManagerBuilder auth, 
-			@Autowired AccountUserDetailsService accountUserDetailsService, 
-			@Autowired PasswordEncoder bcryptPasswordEncoder
+			@Autowired UserDetailsService userDetailsService, 
+			@Autowired PasswordEncoder passwordEncoder
 		) throws Exception {
 	    auth
-	        .userDetailsService(accountUserDetailsService)
-	        .passwordEncoder(bcryptPasswordEncoder);
+	        .userDetailsService(userDetailsService)
+	        .passwordEncoder(passwordEncoder);
 	}
 }

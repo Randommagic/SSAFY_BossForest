@@ -20,4 +20,6 @@ public class RedisHttpSessionConfig {
 	public LettuceConnectionFactory redisConnectionFactory() {
 		return new LettuceConnectionFactory(host, port);
 	}
+	
+
 }
