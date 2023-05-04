@@ -13,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,6 +31,7 @@ import com.ssafy.raid.auth.exception.BadRequestException;
 import com.ssafy.raid.auth.filter.AccountUsernamePasswordAuthenticationFilter;
 
 @Configuration
+@EnableWebSecurity(debug = true)
 public class SecurityConfig{
 	
 	@Autowired UserDetailsService userDetailsService;
@@ -72,9 +74,10 @@ public class SecurityConfig{
 	        Account account = (Account) authentication.getPrincipal();
 	        response.setStatus(HttpServletResponse.SC_OK);
 	        response.setContentType("application/json");
-	        byte[] sessionId = request.getSession(false).getId().getBytes();
+	        byte[] sessionId = request.getSession().getId().getBytes();
 	        Encoder encoder = getSessionIdEncoder();
-	        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseBuilder.AuthComplete(account, new String(encoder.encode(sessionId), "UTF-8"))));
+	        String playerKey = new String(encoder.encode(sessionId));
+	        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseBuilder.AuthComplete(account, playerKey)));
 	    };
 	}
 	
