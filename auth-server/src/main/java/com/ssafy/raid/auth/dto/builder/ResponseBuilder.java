@@ -22,7 +22,7 @@ public class ResponseBuilder {
 	}
 	
 	public static ResponseDTO AuthComplete(Account account, String sessionID) {
-		return new ResponseDTO(ResultCode.AuthIsComplete, account.getId(), completeMessage, HttpStatus.OK, new AccountData(account.getNickname(), sessionID));
+		return new ResponseDTO(ResultCode.AuthIsComplete, account.getId(), completeMessage, HttpStatus.OK, new AccountData(account.getUid(), account.getId(), account.getNickname(), sessionID));
 	}
 	
 	public static ResponseDTO AuthFailed() {
