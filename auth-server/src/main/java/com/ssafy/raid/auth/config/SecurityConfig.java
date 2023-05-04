@@ -1,5 +1,8 @@
 package com.ssafy.raid.auth.config;
 
+import java.util.Base64;
+import java.util.Base64.Encoder;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +13,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,7 +21,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,7 +30,6 @@ import com.ssafy.raid.auth.exception.BadRequestException;
 import com.ssafy.raid.auth.filter.AccountUsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity(debug = true)
 public class SecurityConfig{
 	
 	@Autowired UserDetailsService userDetailsService;
@@ -70,10 +70,11 @@ public class SecurityConfig{
 	public AuthenticationSuccessHandler authenticationSuccessHandler() {
 	    return (request, response, authentication) -> {
 	        Account account = (Account) authentication.getPrincipal();
-	        System.out.println(authentication.getDetails());
 	        response.setStatus(HttpServletResponse.SC_OK);
 	        response.setContentType("application/json");
-	        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseBuilder.AuthComplete(account, "")));
+	        byte[] sessionId = request.getSession(false).getId().getBytes();
+	        Encoder encoder = getSessionIdEncoder();
+	        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseBuilder.AuthComplete(account, new String(encoder.encode(sessionId), "UTF-8"))));
 	    };
 	}
 	
@@ -107,6 +108,11 @@ public class SecurityConfig{
 	@Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
+	}
+	
+	@Bean
+	public Encoder getSessionIdEncoder() {
+		return Base64.getEncoder();
 	}
 	
 	@Bean
