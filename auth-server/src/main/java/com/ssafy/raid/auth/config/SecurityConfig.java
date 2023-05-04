@@ -19,6 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,14 +44,17 @@ public class SecurityConfig{
                 .antMatchers("/login").permitAll()
                 .anyRequest().authenticated()
             .and()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             .and()
+            
             .addFilterBefore(jsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
             .formLogin()
-                .loginProcessingUrl("/login")
+            	.loginProcessingUrl("/login")
             .and()
             .logout()
                 .logoutUrl("/logout")
+                .invalidateHttpSession(true)
+    			.deleteCookies("SESSION")
                 .logoutSuccessHandler(logoutSuccessHandler());
         return http.build();
     }
@@ -66,9 +70,10 @@ public class SecurityConfig{
 	public AuthenticationSuccessHandler authenticationSuccessHandler() {
 	    return (request, response, authentication) -> {
 	        Account account = (Account) authentication.getPrincipal();
+	        System.out.println(authentication.getDetails());
 	        response.setStatus(HttpServletResponse.SC_OK);
 	        response.setContentType("application/json");
-	        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseBuilder.AuthComplete(account)));
+	        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseBuilder.AuthComplete(account, "")));
 	    };
 	}
 	

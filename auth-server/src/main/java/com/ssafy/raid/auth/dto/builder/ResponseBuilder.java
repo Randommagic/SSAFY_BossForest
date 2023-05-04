@@ -21,8 +21,8 @@ public class ResponseBuilder {
 		return incomplete;
 	}
 	
-	public static ResponseDTO AuthComplete(Account account) {
-		return new ResponseDTO(ResultCode.AuthIsComplete, account.getId(), completeMessage, HttpStatus.OK, new AccountData(account.getNickname()));
+	public static ResponseDTO AuthComplete(Account account, String sessionID) {
+		return new ResponseDTO(ResultCode.AuthIsComplete, account.getId(), completeMessage, HttpStatus.OK, new AccountData(account.getNickname(), sessionID));
 	}
 	
 	public static ResponseDTO AuthFailed() {

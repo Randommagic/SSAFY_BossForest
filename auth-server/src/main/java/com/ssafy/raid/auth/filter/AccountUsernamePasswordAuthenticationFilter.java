@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,6 +14,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StreamUtils;
 
@@ -40,6 +42,7 @@ public class AccountUsernamePasswordAuthenticationFilter extends AbstractAuthent
         this.objectMapper = objectMapper;
         setAuthenticationSuccessHandler(authenticationSuccessHandler);
         setAuthenticationFailureHandler(authenticationFailureHandler);
+        setSessionAuthenticationStrategy(new SessionFixationProtectionStrategy());
     }
 
     @Override
@@ -63,6 +66,7 @@ public class AccountUsernamePasswordAuthenticationFilter extends AbstractAuthent
 
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
         setDetails(request, authRequest);
+        this.setAllowSessionCreation(true);
         return this.getAuthenticationManager().authenticate(authRequest);
     }
 
