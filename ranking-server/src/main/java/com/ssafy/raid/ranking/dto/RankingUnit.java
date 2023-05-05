@@ -4,41 +4,34 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "RankingUnit")
 public class RankingUnit implements Serializable {
 	
-	@Id
+	@Column(nullable = false)
     private int uid;
-	
-    @Id
-    @JoinColumn(table = "ranking")
-	private int rankingId;
 	
 	@Column(nullable = false)
 	private String nickname;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(table = "Ranking")
+	private Ranking ranking;
+	
 	@Column(nullable = false)
     private int characterClassId;
 
-	public int getUid() {
-		return uid;
+	public Ranking getRanking() {
+		return ranking;
 	}
 
-	public void setUid(int uid) {
-		this.uid = uid;
-	}
-
-	public int getRankingId() {
-		return rankingId;
-	}
-
-	public void setRankingId(int rankingId) {
-		this.rankingId = rankingId;
+	public void setRanking(Ranking ranking) {
+		this.ranking = ranking;
 	}
 
 	public String getNickname() {
@@ -59,9 +52,7 @@ public class RankingUnit implements Serializable {
 
 	@Override
 	public String toString() {
-		return "RankingUnit [uid=" + uid + ", nickname=" + nickname + ", characterClassId=" + characterClassId + "]";
+		return "RankingUnit [nickname=" + nickname + ", characterClassId=" + characterClassId + "]";
 	}
-	
-	
 	
 }
