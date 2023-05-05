@@ -4,42 +4,45 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Table;
+
+import org.springframework.data.domain.Persistable;
 
 @Entity
 @Table(name = "RankingUnit")
-public class RankingUnit implements Serializable {
+@IdClass(RankingUnitId.class)
+public class RankingUnit implements Serializable, Persistable<Integer> {
 	
+	@Id
 	@Column(nullable = false)
     private int uid;
 	
+	@Id
 	@Column(nullable = false)
-	private String nickname;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(table = "Ranking")
-	private Ranking ranking;
+    private int rankingId;
 	
 	@Column(nullable = false)
     private int characterClassId;
+	
+	@Column(nullable = false)
+	private String nickname;
 
-	public Ranking getRanking() {
-		return ranking;
+	public int getUid() {
+		return uid;
 	}
 
-	public void setRanking(Ranking ranking) {
-		this.ranking = ranking;
+	public void setUid(int uid) {
+		this.uid = uid;
 	}
 
-	public String getNickname() {
-		return nickname;
+	public int getRankingId() {
+		return rankingId;
 	}
 
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
+	public void setRankingId(int rankingId) {
+		this.rankingId = rankingId;
 	}
 
 	public int getCharacterClassId() {
@@ -50,9 +53,48 @@ public class RankingUnit implements Serializable {
 		this.characterClassId = characterClassId;
 	}
 
-	@Override
-	public String toString() {
-		return "RankingUnit [nickname=" + nickname + ", characterClassId=" + characterClassId + "]";
+	public String getNickname() {
+		return nickname;
 	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + rankingId;
+		result = prime * result + uid;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RankingUnit other = (RankingUnit) obj;
+		if (rankingId != other.rankingId)
+			return false;
+		if (uid != other.uid)
+			return false;
+		return true;
+	}
+
+	@Override
+	public Integer getId() {
+		return rankingId;
+	}
+
+	@Override
+	public boolean isNew() {
+		return true;
+	}
+
 	
 }

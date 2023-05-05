@@ -10,7 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -34,10 +33,8 @@ public class Ranking {
     @Column(nullable = false)
     private int mapId;
 
-    @OneToMany(targetEntity = RankingUnit.class, fetch = FetchType.EAGER)
-    @JoinColumn(name= "rankingId")
+    @OneToMany(mappedBy="rankingId", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<RankingUnit> rankingUnits = new ArrayList<>();
-
     
 	public int getRankingId() {
 		return rankingId;

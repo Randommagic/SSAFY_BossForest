@@ -24,7 +24,7 @@ public class Account implements UserDetails{
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer uid;
+    private int uid;
     
     @Column(length = 32, nullable = false)
     private String id;
@@ -39,11 +39,11 @@ public class Account implements UserDetails{
         this.password = password;
     }
 
-	public Integer getUid() {
+	public int getUid() {
 		return uid;
 	}
 
-	public void setUid(Integer uid) {
+	public void setUid(int uid) {
 		this.uid = uid;
 	}
 
