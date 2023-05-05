@@ -49,7 +49,6 @@ public class SecurityConfig{
             .authorizeRequests()
             	.antMatchers(HttpMethod.GET, "/ranking").permitAll()
             	.antMatchers(HttpMethod.POST, "/ranking").permitAll()
-            	.antMatchers(HttpMethod.GET, "/test").permitAll()
             ;
         return http.build();
     }
