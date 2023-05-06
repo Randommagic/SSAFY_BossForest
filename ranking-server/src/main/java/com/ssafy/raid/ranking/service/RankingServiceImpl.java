@@ -1,5 +1,7 @@
 package com.ssafy.raid.ranking.service;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,7 @@ public class RankingServiceImpl implements RankingService {
 	}
 
 	@Override
-	public Iterable<Ranking> getAllRanking() {
+	public List<Ranking> getAllRanking() {
 		return rankingRepository.findAll();
 	}
 

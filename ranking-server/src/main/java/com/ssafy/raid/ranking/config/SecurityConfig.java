@@ -47,8 +47,8 @@ public class SecurityConfig{
             .sessionManagement().sessionFixation().none()
             .and()
             .authorizeRequests()
-            	.antMatchers(HttpMethod.GET, "/ranking").permitAll()
-            	.antMatchers(HttpMethod.POST, "/ranking").permitAll()
+            	.antMatchers(HttpMethod.GET, "/ranking").authenticated()
+            	.antMatchers(HttpMethod.POST, "/ranking").authenticated()
             ;
         return http.build();
     }
