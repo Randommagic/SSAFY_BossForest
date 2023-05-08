@@ -11,7 +11,7 @@ import com.ssafy.raid.ranking.dto.Ranking;
 @Repository
 public interface RankingRepository extends CrudRepository<Ranking, Integer>{
 
-	@Query("select r from Ranking r join fetch r.rankingUnits")
+	@Query("select r from Ranking r join fetch r.rankingUnits order by r.completeTime")
 	List<Ranking> findAll();
 	
 }
