@@ -18,4 +18,22 @@ public class LoginResponseDTO extends ResponseDTO{
 		this.Data = data;
 	}
 
+	public String getUserId() {
+		return UserId;
+	}
+
+	public void setUserId(String userId) {
+		UserId = userId;
+	}
+
+	public AccountData getData() {
+		return Data;
+	}
+
+	public void setData(AccountData data) {
+		Data = data;
+	}
+	
+	
+
 }

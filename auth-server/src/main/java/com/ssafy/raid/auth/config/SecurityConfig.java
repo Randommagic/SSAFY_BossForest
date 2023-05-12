@@ -79,7 +79,9 @@ public class SecurityConfig{
 	        byte[] sessionId = request.getSession().getId().getBytes();
 	        Encoder encoder = getSessionIdEncoder();
 	        String playerKey = new String(encoder.encode(sessionId));
-	        response.getWriter().write(new ObjectMapper().writeValueAsString(LoginResponseBuilder.AuthComplete(account, playerKey)));
+	        
+	        String res = new ObjectMapper().writeValueAsString(LoginResponseBuilder.AuthComplete(account, playerKey));
+	        response.getWriter().write(res);
 	    };
 	}
 	
