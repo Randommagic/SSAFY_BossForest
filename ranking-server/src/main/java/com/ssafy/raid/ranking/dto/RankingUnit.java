@@ -10,6 +10,8 @@ import javax.persistence.Table;
 
 import org.springframework.data.domain.Persistable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "RankingUnit")
 @IdClass(RankingUnitId.class)
@@ -92,6 +94,7 @@ public class RankingUnit implements Serializable, Persistable<Integer> {
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean isNew() {
 		return true;
 	}
