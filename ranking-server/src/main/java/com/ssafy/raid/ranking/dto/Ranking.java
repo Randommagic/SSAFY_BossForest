@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
-import javax.persistence.ColumnResult;
 import javax.persistence.Entity;
 import javax.persistence.EntityResult;
 import javax.persistence.FetchType;
@@ -16,11 +15,9 @@ import javax.persistence.Id;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SqlResultSetMapping;
-import javax.persistence.ConstructorResult;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.DynamicInsert;
 
@@ -55,28 +52,18 @@ import org.hibernate.annotations.DynamicInsert;
 				@EntityResult(
 						entityClass=com.ssafy.raid.ranking.dto.Ranking.class, 
 						fields= {
+							@FieldResult(name="rank", column="rank"),
 							@FieldResult(name="rankingId", column="rankingId"),
 							@FieldResult(name="mapId", column="mapId"),
 							@FieldResult(name="completeTime", column="completeTime"),
 							@FieldResult(name="created", column="created")
 						}
 					)
-		},
-		classes ={
-				@ConstructorResult(
-						targetClass=com.ssafy.raid.ranking.dto.Ranking.class, 
-						columns={
-				                @ColumnResult(name = "rank", type = Integer.class),
-				                @ColumnResult(name = "rankingId", type = Integer.class),
-				                @ColumnResult(name = "mapId", type = Integer.class),
-				                @ColumnResult(name = "completeTime", type = Long.class),
-				                @ColumnResult(name = "created", type = Date.class)
-						}
-					)}
+		}
 )
 public class Ranking {
     
-	@Transient
+	@Column(updatable = false, insertable = false)
     private int rank;
 	
     @Id
@@ -95,14 +82,6 @@ public class Ranking {
 
     @OneToMany(mappedBy="rankingId", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<RankingUnit> rankingUnits = new ArrayList<>();
-    
-	public Ranking(int rank, int rankingId, int mapId, long completeTime, Date created) {
-		this.rank = rank;
-		this.rankingId = rankingId;
-		this.mapId = mapId;
-		this.completeTime = completeTime;
-		this.created = created;
-	}
 	
 	public Ranking() {}
 
@@ -153,7 +132,5 @@ public class Ranking {
 	public void setRankingUnits(List<RankingUnit> rankingUnits) {
 		this.rankingUnits = rankingUnits;
 	}
-
 	
-    
 }
