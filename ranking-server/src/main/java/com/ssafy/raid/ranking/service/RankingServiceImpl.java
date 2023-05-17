@@ -37,4 +37,8 @@ public class RankingServiceImpl implements RankingService {
 		return rankingRepository.findAll();
 	}
 
+	@Override
+	public List<Ranking> getAllRanking(int start, int count, int mapId, String nickname) {
+		return rankingRepository.findAllRanking(mapId, nickname, start, count);
+	}
 }

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.raid.dto.MultiDataResponse;
@@ -20,8 +21,13 @@ public class RankingController {
 	RankingService rankingService;
 	
 	@GetMapping("/ranking")
-	public ResponseEntity<MultiDataResponse<Ranking>> getAllRanking(){
-		List<Ranking> rankings = rankingService.getAllRanking();
+	public ResponseEntity<MultiDataResponse<Ranking>> getAllRanking(
+			@RequestParam(required=true) int mapId, 
+			@RequestParam(defaultValue="") String nickname, 
+			@RequestParam(defaultValue="0") int start, 
+			@RequestParam(defaultValue="10") int count
+		){
+		List<Ranking> rankings = rankingService.getAllRanking(start, count, mapId, nickname);
 		MultiDataResponse<Ranking> response = new MultiDataResponse<>(rankings.size(), rankings);
 		return ResponseEntity.ok(response);
 	}
