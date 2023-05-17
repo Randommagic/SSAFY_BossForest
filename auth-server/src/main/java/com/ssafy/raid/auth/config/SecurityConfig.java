@@ -27,7 +27,7 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.raid.auth.dto.Account;
-import com.ssafy.raid.auth.dto.builder.ResponseBuilder;
+import com.ssafy.raid.auth.dto.builder.LoginResponseBuilder;
 import com.ssafy.raid.auth.exception.BadRequestException;
 import com.ssafy.raid.auth.filter.AccountUsernamePasswordAuthenticationFilter;
 
@@ -45,11 +45,12 @@ public class SecurityConfig{
             .csrf().disable()
             .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/account").permitAll()
+                .antMatchers(HttpMethod.GET, "/account/id").permitAll()
                 .anyRequest().authenticated()
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             .and()
-            
             .addFilterBefore(jsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
             .formLogin()
             	.loginProcessingUrl("/login")
@@ -78,7 +79,7 @@ public class SecurityConfig{
 	        byte[] sessionId = request.getSession().getId().getBytes();
 	        Encoder encoder = getSessionIdEncoder();
 	        String playerKey = new String(encoder.encode(sessionId));
-	        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseBuilder.AuthComplete(account, playerKey)));
+	        response.getWriter().write(new ObjectMapper().writeValueAsString(LoginResponseBuilder.AuthComplete(account, playerKey)));
 	    };
 	}
 	
@@ -89,15 +90,15 @@ public class SecurityConfig{
 	    	if(exception instanceof BadCredentialsException) {
 	    		response.setStatus(HttpServletResponse.SC_OK);
 		        response.setContentType("application/json");
-		        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseBuilder.AuthFailed()));
+		        response.getWriter().write(new ObjectMapper().writeValueAsString(LoginResponseBuilder.AuthFailed()));
 	    	}else if(exception instanceof BadRequestException){
 	    		response.setStatus(HttpServletResponse.SC_OK);
 		        response.setContentType("application/json");
-	        	response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseBuilder.InvalidParameters()));
+	        	response.getWriter().write(new ObjectMapper().writeValueAsString(LoginResponseBuilder.InvalidParameters()));
 	    	}else {
 	    		response.setStatus(HttpServletResponse.SC_OK);
 		        response.setContentType("application/json");
-		        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseBuilder.AuthIsIncomplete()));
+		        response.getWriter().write(new ObjectMapper().writeValueAsString(LoginResponseBuilder.AuthIsIncomplete()));
 	    	}
 	    };
 	}
