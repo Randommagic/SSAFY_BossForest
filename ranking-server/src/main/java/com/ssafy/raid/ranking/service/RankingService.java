@@ -10,4 +10,6 @@ public interface RankingService {
 	
 	public List<Ranking> getAllRanking();
 	
+	public List<Ranking> getAllRanking(int start, int count, int mapId, String nickname);
+	
 }
